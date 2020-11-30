@@ -25,3 +25,4 @@ hs_err_pid*
 # private properties
 db.properties
 nbproject/private/private.properties
+/build/
