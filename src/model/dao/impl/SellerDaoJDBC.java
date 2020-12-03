@@ -26,6 +26,7 @@ public class SellerDaoJDBC implements SellerDao{
     @Override
     public void insert(Seller obj) {
         PreparedStatement st = null;
+        ResultSet rs = null;
         try{
             st = conn.prepareStatement("INSERT INTO seller "
                     + "(name, email, birthdate, basesalary, departmentid) "
@@ -41,13 +42,11 @@ public class SellerDaoJDBC implements SellerDao{
             int rowsAffected = st.executeUpdate();
             
             if (rowsAffected > 0) {
-                ResultSet rs = st.getGeneratedKeys();
+                rs = st.getGeneratedKeys();
                 if (rs.next()){
                     int id = rs.getInt(1);
                     obj.setId(id);
                 }
-                DB.closeResultSet(rs);
-
             } else {
                 throw new DbException("Unexpected error! No rows were affected!");
             }
@@ -55,6 +54,7 @@ public class SellerDaoJDBC implements SellerDao{
         } catch (SQLException e){
             throw new DbException(e.getMessage());
         } finally {
+            DB.closeResultSet(rs);
             DB.closeStatement(st);
         }
     }
